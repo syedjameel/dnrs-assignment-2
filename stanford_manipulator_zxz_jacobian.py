@@ -1,7 +1,6 @@
 # Written by Jameel Ahmed Syed
 # Email id: j.syed@innopolis.university
-
-
+import sympy
 from numpy import pi
 from utils.StanfordManipulatorKinematics import *
 
@@ -34,10 +33,24 @@ if __name__ == "__main__":
     for key, val in T.items():
         print_matrix(input_matrix=val, name_matrix=key)
 
+    J = jacobian_geometrical(tranforamtions=T)
+    print_matrix(input_matrix=J, name_matrix='J')
+
+    determinant = J.det()
+    print_matrix(input_matrix=determinant, name_matrix="Determinant: ")
+
     # Forward Kinematics in Symbolic Form
     T = forward(joint_angles=t, link_lengths=d, euler_wrist=wrist, symbolic=True)
     for key, val in T.items():
         print_matrix(input_matrix=val, name_matrix=key)
+
+    J = jacobian_geometrical(tranforamtions=T)
+    print_matrix(input_matrix=J, name_matrix='J')
+    #for key, val in J.items():
+    #    print_matrix(input_matrix=val, name_matrix=key)
+
+    determinant = J.det()
+    print_matrix(input_matrix=determinant, name_matrix="Determinant: ")
 
     
 
