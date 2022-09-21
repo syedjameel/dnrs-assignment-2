@@ -28,16 +28,29 @@ wrist = ['z', 'x', 'z']     # Euler's Wrist Configuration (xyz, xzy, xyx, xzx, y
 
 if __name__ == "__main__":
 
-    # Forward Kinematics in Numerical Form
+    # Forward Kinematics of the Stanford Manipulator
     T = forward(joint_angles=t, link_lengths=d, euler_wrist=wrist, symbolic=False)
-    for key, val in T.items():
-        print_matrix(input_matrix=val, name_matrix=key)
+    #for key, val in T.items():         # Uncomment these two lines to print all the transformations
+    #    print_matrix(input_matrix=val, name_matrix=key)
 
+    # Jacobian Matrix Geometrically/Screw Theory
     J = jacobian_geometrical(tranforamtions=T)
-    print_matrix(input_matrix=J, name_matrix='J')
+    print_matrix(input_matrix=J, name_matrix='Jacobian Matrix')
 
+    # Calculating the Determinant of the Jacobian Matrix to check the singularity
     determinant = J.det()
     print_matrix(input_matrix=determinant, name_matrix="Determinant: ")
+
+    if determinant != 0:
+        print(f"The Jacobian Matrix is Non-Singular")
+    elif determinant == 0:
+        print(f"The Jacobian Matrix is Singular")
+
+
+    # Solve the determinant of jacobian to be zero to get the singularities
+
+    
+
 
     # Forward Kinematics in Symbolic Form
     T = forward(joint_angles=t, link_lengths=d, euler_wrist=wrist, symbolic=True)
@@ -50,6 +63,8 @@ if __name__ == "__main__":
     #    print_matrix(input_matrix=val, name_matrix=key)
 
     determinant = J.det()
+    print("\n\n")
+    print("Deter = ", determinant)
     print_matrix(input_matrix=determinant, name_matrix="Determinant: ")
 
     
