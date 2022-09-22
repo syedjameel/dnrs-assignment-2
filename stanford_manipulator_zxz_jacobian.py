@@ -1,8 +1,9 @@
 # Written by Jameel Ahmed Syed
 # Email id: j.syed@innopolis.university
-import sympy
 from numpy import pi
 from utils.StanfordManipulatorKinematics import *
+from art import *
+import math
 
 T = []
 t1 = pi/2   # Joint Angle 1
@@ -25,47 +26,78 @@ d = [d1, d2, d3, d4, d5, d6]    # All the Link Lengths
 
 wrist = ['z', 'x', 'z']     # Euler's Wrist Configuration (xyz, xzy, xyx, xzx, yxz, yzx, yxy, yzy, zxy, zyx, zyz, zxz)
 
+joint_coordinates = [np.rad2deg(t1), np.rad2deg(t2), d3, np.rad2deg(t4), np.rad2deg(t5), np.rad2deg(t6)]
 
 if __name__ == "__main__":
 
+    # MAIN TASK SOLUTION
+    tprint("MAIN      TASK : ")
     # Forward Kinematics of the Stanford Manipulator
     T = forward(joint_angles=t, link_lengths=d, euler_wrist=wrist, symbolic=False)
-    #for key, val in T.items():         # Uncomment these two lines to print all the transformations
-    #    print_matrix(input_matrix=val, name_matrix=key)
 
-    # Jacobian Matrix Geometrically/Screw Theory
+    # Jacobian Matrix using Geometrical/Screw Theory
     J = jacobian_geometrical(tranforamtions=T)
-    print_matrix(input_matrix=J, name_matrix='Jacobian Matrix')
+    print_matrix(input_matrix=J, name_matrix='Jacobian Matrix Geometrically')
 
     # Calculating the Determinant of the Jacobian Matrix to check the singularity
     determinant = J.det()
-    print_matrix(input_matrix=determinant, name_matrix="Determinant: ")
+    print_matrix(input_matrix=determinant, name_matrix="Determinant")
 
     if determinant != 0:
-        print(f"The Jacobian Matrix is Non-Singular")
+        print(f"No Singularities found at the following Joint Coordinates \n q = {joint_coordinates} \n")
     elif determinant == 0:
-        print(f"The Jacobian Matrix is Singular")
-
-
-    # Solve the determinant of jacobian to be zero to get the singularities
-
-    
-
+        print(f"Singularities found at the following Joint Coordinates \n q = {joint_coordinates} \n")
 
     # Forward Kinematics in Symbolic Form
-    T = forward(joint_angles=t, link_lengths=d, euler_wrist=wrist, symbolic=True)
-    for key, val in T.items():
-        print_matrix(input_matrix=val, name_matrix=key)
+    T_symbolic = forward(joint_angles=t, link_lengths=d, euler_wrist=wrist, symbolic=True)
 
+    # Jacobian Matrix Symbolic
     J = jacobian_geometrical(tranforamtions=T)
-    print_matrix(input_matrix=J, name_matrix='J')
-    #for key, val in J.items():
-    #    print_matrix(input_matrix=val, name_matrix=key)
 
-    determinant = J.det()
-    print("\n\n")
-    print("Deter = ", determinant)
-    print_matrix(input_matrix=determinant, name_matrix="Determinant: ")
+    print("Please wait the determinant is getting solved symbolically.... ")
+    # Please uncomment the following 4 lines to check for the singularities
+    # Note : It will take some time (1 - 2 minutes) to process the determinant symbolically
+    # and then find the singularities, so please wait...
+
+    #J_determinant = J.det()
+    #print("J_determinant = ", J_determinant)
+    #solved_determinant = solve(J_determinant)
+    #print("Singularities = ", solved_determinant)
+
+    # I have got the following results from the above 4 lines
+    print("The Singularities are =  [{d3: 0}, {t2: 0}, {t5: 0}, {t5: pi}] \n\n")
+
+    # BONUS TASK 2 SOLUTION
+    tprint("BONUS       TASK 2 : ")
+
+    # From the Final Homogeneous Matrix we get the following Equations
+    X = trigsimp(T_symbolic['X'])
+    Y = trigsimp(T_symbolic['Y'])
+    Z = trigsimp(T_symbolic['Z'])
+    ThetaZ = trigsimp(atan2((T_symbolic['T06'][0, 2]), -T_symbolic['T06'][1, 2]))
+    ThetaX = trigsimp(atan2(-sqrt(1 - (T_symbolic['T06'][2, 2])**2), (T_symbolic['T06'][2, 2])))
+    ThetaY = trigsimp(atan2((-T_symbolic['T06'][2, 1]), (T_symbolic['T06'][2, 0])))
+
+    print('X = ', X)
+    print('Y = ', Y)
+    print('Z = ', Z)
+    print('ThetaX = ', ThetaX)
+    print('ThetaY = ', ThetaY)
+    print('ThetaZ = ', ThetaZ)
+
+    function_list = [X, Y, Z, ThetaX, ThetaY, ThetaZ]
+    Jn = jacobian_numerically(function_list, t1, t2, d3, t4, t5, t6, d2, d6)
+    mat = []
+    a = 0
+    while Jn != []:
+        mat.append(Jn[:6])
+        Jn = Jn[6:]
+        a = a + 1
+    Jm = Matrix(mat)
+    print("\n")
+    print_matrix(input_matrix=Jm, name_matrix="Jacobian Matrix Numerically")
+
+
 
     
 

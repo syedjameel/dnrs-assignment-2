@@ -3,10 +3,8 @@
 
 # Forward, Inverse, Jacobian for the Stanford Manipulator with spherical wrist
 
-
 from utils.SimpleTranformations import *
 symbol_names = ['t1', 't2', 't3', 't4', 't5', 't6', 'd1', 'd2', 'd3', 'd4', 'd5', 'd6']
-
 
 
 def forward(joint_angles, link_lengths, euler_wrist, symbolic):
@@ -50,19 +48,18 @@ def forward(joint_angles, link_lengths, euler_wrist, symbolic):
     X = t06[0, 3]
     Y = t06[1, 3]
     Z = t06[2, 3]
-    if symbolic is True:
-        d = diff(t06[2, 3], d3)
-        print('Diff = ', d)
-
+    # if symbolic is True:
+    #    d = diff(t06[2, 3], d3)
+    #    print('Diff = ', d)
     T = {'T01': t01, 'T12': t12, 'T23': t23, 'T34': t34, 'T45': t45, 'T56': t56, 'T03': t03, 'T36' : t36, 'T06': t06, 'P0w' : p0w, 'P06': p06, 'X' : X, 'Y': Y, 'Z' : Z, 'T02': t02, 'T04': t04, 'T05': t05}
     return T
 
-
+# ToDo
 def inverse(position, wrist_configuration):
     pass
 
 def jacobian_geometrical(tranforamtions):
-    """Returns the Jacobian Matrix for the Forward kinematics"""
+    """Returns the Jacobian Matrix from the Forward kinematics"""
     j = ['j1', 'j2', 'j3', 'j4', 'j5', 'j6']
 
     for var in j:
@@ -78,6 +75,7 @@ def jacobian_geometrical(tranforamtions):
     j6 = t05[0:3, 2].cross((p06-t05[0:3, 3])).row_insert(3, t05[0:3, 2]) # if the position is the same as p0w then change this thing to t04[0:3, 3]
 
     cols = [j1, j2, j3, j4, j5, j6]
+
     J = Matrix([])
     for j in range(len(cols)):
         J = J.col_insert(j, cols[j])
@@ -85,6 +83,33 @@ def jacobian_geometrical(tranforamtions):
 
     return J
 
+def jacobian_numerically(function_list, t1, t2, d3, t4, t5, t6, d2, d6):
+    from math import cos, sin
+    q_original = []
+    t = [t1, t2, d3, t4, t5, t6]
+    for i in t:
+        q_original.append(i)
+    d = q_original.copy()
+    j = []
+    J = Matrix([])
+    for fun in range(len(function_list)):
+        for i in range(len(t)):
+            fx = eval(str(function_list[fun]))
+            dh = 1.0e-8
+            t[i] = d[i] + dh
+            t1, t2, d3, t4, t5, t6 = t
+            fxh = eval(str(function_list[fun]))
+            f = (fxh - fx) / dh
+            t1, t2, d3, t4, t5, t6 = update(d)
+            t = update(d)
+            j.append(f)
+        J.col_insert(fun-1, Matrix([j]))
+    return j
+
+def update(d):
+    a = []
+    a = d
+    return a
 def get_rot(axis):
     """Gets the rotations as per the Euler's wrist configurations"""
     if axis == 'x' or axis == 'X':

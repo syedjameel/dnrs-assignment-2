@@ -3,7 +3,7 @@
 
 # Simple transformations
 
-from sympy import Matrix, diff, det
+from sympy import Matrix, diff, det, solve, atan2, simplify, trigsimp, sqrt
 import numpy as np
 from traceback import format_exc
 import datetime
@@ -83,12 +83,13 @@ def print_matrix(input_matrix, name_matrix='T'):
             print(name_matrix, '=')
             s = [[str(e) for e in row] for row in a]
             lens = [max(map(len, col)) for col in zip(*s)]
-            fmt = '\t\t'.join('{{:{}}}'.format(x) for x in lens)
+            fmt = '\t'.join('{{:{}}}'.format(x) for x in lens)
             table = [fmt.format(*row) for row in s]
             print('\n'.join(table), '\n')
         else:
             print(name_matrix, '= ', end="")
             print(a)
+
     except Exception:
         error_file = open("error_logs.txt", "a")
         error_file.writelines(f"{datetime.datetime.now()}\n{format_exc()}\n\n")
