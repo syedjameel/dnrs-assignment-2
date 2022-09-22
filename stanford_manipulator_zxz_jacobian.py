@@ -2,7 +2,7 @@
 # Email id: j.syed@innopolis.university
 from numpy import pi
 from utils.StanfordManipulatorKinematics import *
-from art import *
+from art import tprint
 import math
 
 T = []
@@ -97,7 +97,7 @@ if __name__ == "__main__":
     print("\n")
     print_matrix(input_matrix=Jm, name_matrix="Jacobian Matrix Numerically")
 
-
+    print("\nWe see the Jacobian Matrices Geometrical and Numerical are similar")
 
     
 
