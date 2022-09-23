@@ -16,6 +16,7 @@ And this tasks are run by a single driver code stanford_manipulator_zxz_jacobian
 ## How to run:
 1. clone this branch : https://github.com/syedjameel/dnrs-assignment-2.git
 2. go to ~/dnrs-assignment-2 folder
+3. In terminal run $ pip3 install -r requirements.txt
 3. In terminal run $ python3 stanford_manipulator_zxz_jacobian.py
 
 
