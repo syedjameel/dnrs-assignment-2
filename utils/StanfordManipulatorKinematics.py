@@ -9,7 +9,8 @@ symbol_names = ['t1', 't2', 't3', 't4', 't5', 't6', 'd1', 'd2', 'd3', 'd4', 'd5'
 
 def forward(joint_angles, link_lengths, euler_wrist, symbolic):
     """Forward Kinematics Solution For Stanford Manipulator
-    with Spherical Wrist in Euler's ZXZ arrangement"""
+    with Spherical Wrist in any valid euler_wrist arrangement
+    :param joint_angles: Contains the joint angles t1, t2, t4, t5, t6 and d3(d3 is not an angle its displacement)"""
     if symbolic is False:
         t1, t2, t3, t4, t5, t6 = joint_angles
         d1, d2, d3, d4, d5, d6 = link_lengths
@@ -59,7 +60,7 @@ def inverse(position, wrist_configuration):
     pass
 
 def jacobian_geometrical(tranforamtions):
-    """Returns the Jacobian Matrix from the Forward kinematics"""
+    """Returns the Jacobian Matrix from the Forward kinematics Geometrically"""
     j = ['j1', 'j2', 'j3', 'j4', 'j5', 'j6']
 
     for var in j:
@@ -84,6 +85,15 @@ def jacobian_geometrical(tranforamtions):
     return J
 
 def jacobian_numerically(function_list, t1, t2, d3, t4, t5, t6, d2, d6):
+    """Returns the Jacobian Matrix Numerically
+    :param function_list: It contains the equations of Position and Orientation
+            i.e. X, Y, Z, ThetaX, ThetaY, ThetaZ
+    :param t1: Angle around the Joint 1
+    :param t2: Angle around the Joint 2
+    :param d3: Distance along the Joint 3
+    :param t4: Angle around the Joint 4
+    :param t5: Angle around the Joint 5
+    :param t6: Angle around the Joint 6"""
     from math import cos, sin
     q_original = []
     t = [t1, t2, d3, t4, t5, t6]

@@ -1,5 +1,10 @@
 # Written by Jameel Ahmed Syed
 # Email id: j.syed@innopolis.university
+
+# Assignment - 2
+# 1. Main Task
+# 2. Bonus Task 2
+
 from numpy import pi
 from utils.StanfordManipulatorKinematics import *
 from art import tprint
@@ -51,7 +56,7 @@ if __name__ == "__main__":
     # Forward Kinematics in Symbolic Form
     T_symbolic = forward(joint_angles=t, link_lengths=d, euler_wrist=wrist, symbolic=True)
 
-    # Jacobian Matrix Symbolic
+    # Jacobian Matrix in Symbolic Form
     J = jacobian_geometrical(tranforamtions=T)
 
     print("Please wait the determinant is getting solved symbolically.... ")
@@ -59,10 +64,10 @@ if __name__ == "__main__":
     # Note : It will take some time (1 - 2 minutes) to process the determinant symbolically
     # and then find the singularities, so please wait...
 
-    #J_determinant = J.det()
-    #print("J_determinant = ", J_determinant)
-    #solved_determinant = solve(J_determinant)
-    #print("Singularities = ", solved_determinant)
+    # J_determinant = J.det()
+    # print("J_determinant = ", J_determinant)
+    # solved_determinant = solve(J_determinant)
+    # print("Singularities = ", solved_determinant)
 
     # I have got the following results from the above 4 lines
     print("The Singularities are =  [{d3: 0}, {t2: 0}, {t5: 0}, {t5: pi}] \n\n")
@@ -98,9 +103,3 @@ if __name__ == "__main__":
     print_matrix(input_matrix=Jm, name_matrix="Jacobian Matrix Numerically")
 
     print("\nWe see the Jacobian Matrices Geometrical and Numerical are similar")
-
-    
-
-
-
-
