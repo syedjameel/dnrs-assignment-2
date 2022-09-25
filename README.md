@@ -5,7 +5,7 @@
 2. Finding Singularities
 
 ## Bonus Task
-1. Bonus Task 2
+1. Bonus Task 2 - https://github.com/syedjameel/dnrs-assignment-2/blob/dnrs-assignment-2/DNRS-%20Home%20task%20(Differential%20kinematics).pdf
 
 
 ## Description:
